@@ -21,19 +21,17 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ExceptionHandler({ CustomerNotFoundException.class })
     public ResponseEntity<Long> registerNewCustomer(@RequestBody final Customer customer) {
         return ResponseEntity.ok(customerService.addCustomer(customer));
     }
 
     @GetMapping
-    @ExceptionHandler({ CustomerNotFoundException.class, TransactionalException.class })
     public Customer getCustomer(@RequestParam Long id) {
+
         return customerService.getCustomer(id);
     }
 
     @GetMapping(path = "/details")
-    @ExceptionHandler({ CustomerNotFoundException.class, TransactionalException.class })
     public Customer getCustomerDetails(@RequestParam Long id) {
         return customerService.getDetails(id);
     }

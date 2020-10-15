@@ -23,7 +23,6 @@ public class TransactionController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ExceptionHandler({ CustomerNotFoundException.class, TransactionalException.class, TransactionNotFoundException.class})
     public ResponseEntity<Transaction> makeTransaction(@RequestBody final Transaction transaction) {
         return ResponseEntity.ok(transactionService.transact(transaction));
     }
