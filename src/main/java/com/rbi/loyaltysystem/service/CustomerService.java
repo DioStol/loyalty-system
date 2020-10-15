@@ -28,7 +28,6 @@ public class CustomerService {
     }
 
     public Customer getCustomer(long id) {
-        updatePoints(id);
         return customerRepository.findById(id);
     }
 
