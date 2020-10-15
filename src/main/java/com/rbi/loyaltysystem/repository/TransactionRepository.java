@@ -3,7 +3,7 @@ package com.rbi.loyaltysystem.repository;
 import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.InMemory;
-import com.rbi.loyaltysystem.repository.api.OrderInMemory;
+import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class TransactionRepository implements InMemory<Transaction>, OrderInMemory {
+public class TransactionRepository implements InMemory<Transaction>, TransactionRepositoryInMemory {
 
     List<Transaction> transactions = new ArrayList<>();
 
@@ -33,11 +33,6 @@ public class TransactionRepository implements InMemory<Transaction>, OrderInMemo
             }
         }
         throw new TransactionNotFoundException();
-    }
-
-    @Override
-    public void update(Transaction object) {
-
     }
 
     @Override

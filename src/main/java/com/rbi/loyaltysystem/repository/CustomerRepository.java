@@ -1,7 +1,10 @@
 package com.rbi.loyaltysystem.repository;
 
+import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
 import com.rbi.loyaltysystem.model.Customer;
+import com.rbi.loyaltysystem.model.Point;
+import com.rbi.loyaltysystem.repository.api.CustomerRepositoryInMemory;
 import com.rbi.loyaltysystem.repository.api.InMemory;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public class CustomerRepository implements InMemory<Customer> {
+public class CustomerRepository implements InMemory<Customer>, CustomerRepositoryInMemory {
 
     private List<Customer> customers;
 
@@ -43,5 +46,25 @@ public class CustomerRepository implements InMemory<Customer> {
         customer.setId(customers.size());
         customers.add(customer);
         return customer.getId();
+    }
+
+    @Override
+    public List<Point> findAllPendingById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<Point> findAllAvailableById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<InvestmentDto> findAllInvestmentsById(long id) {
+        return null;
+    }
+
+    @Override
+    public void invest(InvestmentDto investment) {
+
     }
 }

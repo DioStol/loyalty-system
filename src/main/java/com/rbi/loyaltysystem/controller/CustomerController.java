@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/customers")
 public class CustomerController {
-
+    //TODO NA MPOREI O XRISTIS NA PROSTHETEI TO ISODIMA TOU KAI NA PERNEI POINTS MONO APO ESWTERIKES SUNALLAGES
+    //TODO NA FTIAKSW METHODO I OPIA THA KSODEUEI TA POINTS TOU SE EPENDISEIS SE STOCK KAI FOREX
     private CustomerService customerService;
 
     @Autowired
@@ -36,4 +37,8 @@ public class CustomerController {
         return customerService.getDetails(id);
     }
 
+    //GET AVALIABLE POINTS
+    //GET PENDING POINTS
+    //ADD INCOME
+    //ADD INVEST POINTS IN STOCKS/FOREX
 }

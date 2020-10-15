@@ -4,7 +4,7 @@ import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.InMemory;
-import com.rbi.loyaltysystem.repository.api.OrderInMemory;
+import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +19,10 @@ import java.util.Set;
 public class CustomerService {
 
     private InMemory<Customer> customerRepository;
-    private OrderInMemory transactionRepository;
+    private TransactionRepositoryInMemory transactionRepository;
 
     @Autowired
-    public CustomerService(InMemory<Customer> customerRepository, OrderInMemory transactionRepository) {
+    public CustomerService(InMemory<Customer> customerRepository, TransactionRepositoryInMemory transactionRepository) {
         this.customerRepository = customerRepository;
         this.transactionRepository = transactionRepository;
     }
