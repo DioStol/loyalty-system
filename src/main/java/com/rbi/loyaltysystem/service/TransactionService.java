@@ -37,16 +37,15 @@ public class TransactionService {
             Customer recipient = customerRepository.findById(transaction.getRecipientId());
 
             if (sender.getBalance() < transaction.getAmount()) {
-                throw new TransactionalException("Mr/Mrs " + sender.getName() + " your balance is lower than "
-                        + transaction.getAmount() + "€");
+                throw new TransactionalException();
             }
 
             if (sender.getId() == recipient.getId()){
-                throw new TransactionalException("Can not transfer money to the same account");
+                throw new TransactionalException();
             }
 
             if (transaction.getAmount() < 0){
-                throw new TransactionalException("Can not transfer negative amount");
+                throw new TransactionalException();
             }
 
             transaction.setDate(LocalDate.now());

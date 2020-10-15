@@ -21,14 +21,14 @@ public class CustomerRepository implements InMemory<Customer> {
     @Override
     public Customer findById(long id) {
         if (customers.size() == 0) {
-            throw new CustomerNotFoundException(id);
+            throw new CustomerNotFoundException();
         }
         for (Customer customer : customers) {
             if (customer.getId() == id) {
                 return customer;
             }
         }
-        throw new CustomerNotFoundException(id);
+        throw new CustomerNotFoundException();
     }
 
     @Override

@@ -25,14 +25,14 @@ public class TransactionRepository implements InMemory<Transaction>, OrderInMemo
     @Override
     public Transaction findById(long id) {
         if (transactions.size() == 0){
-            throw new TransactionNotFoundException("There are no transactions");
+            throw new TransactionNotFoundException();
         }
         for (Transaction transaction: transactions) {
             if (transaction.getId() == id){
                 return transaction;
             }
         }
-        throw new TransactionNotFoundException("Transaction does not exists");
+        throw new TransactionNotFoundException();
     }
 
     @Override
@@ -43,11 +43,11 @@ public class TransactionRepository implements InMemory<Transaction>, OrderInMemo
     @Override
     public double findSumOrderByDate(long id) {
         if (transactions.size() == 0){
-            throw new TransactionNotFoundException("There are no transactions");
+            throw new TransactionNotFoundException();
         }
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         if (customerTransactions.size() == 0){
-            throw new TransactionNotFoundException("There are no transactions for customer id" + id);
+            throw new TransactionNotFoundException();
         }
 
         return getLastWeekSpendings(customerTransactions);

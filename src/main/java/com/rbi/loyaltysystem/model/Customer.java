@@ -27,7 +27,7 @@ public class Customer {
 
     public void deposit(double amount) {
         if (amount < 0) {
-            throw new TransactionalException("Income can not be negative");
+            throw new TransactionalException();
         }
 
         balance += amount;
@@ -35,7 +35,7 @@ public class Customer {
 
     public void withdraw(double amount) {
         if (balance < amount) {
-            throw new TransactionalException("Income can not be negative");
+            throw new TransactionalException();
         }
 
         balance -= amount;
