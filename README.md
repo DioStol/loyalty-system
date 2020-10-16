@@ -118,6 +118,42 @@ POST http://localhost:8080/v1/transactions
 }
 ```
 
+#### Get all transactions
+
+GET http://localhost:8080/v1/transactions?id=0
+
+*Request body: custmoer id*
+
+*Response:* 
+```json
+{
+    "transactions": [
+        {
+            "id": 0,
+            "date": "2020-10-16",
+            "senderId": 0,
+            "recipientId": 1,
+            "amount": 5000.0
+        },
+        {
+            "id": 1,
+            "date": "2020-10-16",
+            "senderId": 0,
+            "recipientId": 1,
+            "amount": 5000.0
+        },
+        {
+            "id": 2,
+            "date": "2020-10-16",
+            "senderId": 0,
+            "recipientId": 1,
+            "amount": 8000.0
+        }
+    ],
+    "total": 18000.0
+}
+```
+
 #### Use earnings from points
 
 POST http://localhost:8080/v1/customers/invest
@@ -138,6 +174,35 @@ POST http://localhost:8080/v1/customers/invest
     "balance": 5000.0,
     "customerId": 0,
     "date": "2020-10-16"
+}
+```
+
+#### Get investments
+
+GET http://localhost:8080/v1/customers/invest?id=0
+
+*Request body: customer id*
+
+*Response:* 
+```json
+{
+    "investments": [
+        {
+            "id": 0,
+            "description": "Invest in bitcoin",
+            "balance": 500.0,
+            "customerId": 0,
+            "date": "2020-10-16"
+        },
+        {
+            "id": 1,
+            "description": "Invest in ethereum",
+            "balance": 250.0,
+            "customerId": 0,
+            "date": "2020-10-16"
+        }
+    ],
+    "total": 750.0
 }
 ```
 
