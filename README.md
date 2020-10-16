@@ -10,7 +10,10 @@ The loyalty system web service has been created to meet the needs of rewarding t
 
 New pending points become  available points for use at the end of every week if:
 
--      The customer has spent at least 500 euro that week
+-       The customer has spent at least 500 euro that week
 
 -       At least one transaction exists for that customer on every day of the week
+
+-       A user will lose all the points if no transaction was made in the last 5 weeks
+
 
