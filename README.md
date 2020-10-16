@@ -1,4 +1,4 @@
-# loyalty-system
+# Welcome to loyalty system
 
 - ## Descrption
 
