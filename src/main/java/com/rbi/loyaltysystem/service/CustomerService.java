@@ -1,8 +1,10 @@
 package com.rbi.loyaltysystem.service;
 
+import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
+import com.rbi.loyaltysystem.repository.CustomerRepository;
 import com.rbi.loyaltysystem.repository.api.InMemory;
 import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,11 @@ import java.util.Set;
 @Service
 public class CustomerService {
 
-    private InMemory<Customer> customerRepository;
+    private CustomerRepository customerRepository;
     private TransactionRepositoryInMemory transactionRepository;
 
     @Autowired
-    public CustomerService(InMemory<Customer> customerRepository, TransactionRepositoryInMemory transactionRepository) {
+    public CustomerService(CustomerRepository customerRepository, TransactionRepositoryInMemory transactionRepository) {
         this.customerRepository = customerRepository;
         this.transactionRepository = transactionRepository;
     }
@@ -35,11 +37,29 @@ public class CustomerService {
         return customerRepository.add(customer);
     }
 
-    public Customer getDetails(long id){
-        Customer customer = customerRepository.findById(id);
-        updatePoints(id);
-        return customer;
+    public InvestmentDto invest(InvestmentDto investment){
+        updatePoints(investment.getCustomerId());
+        return customerRepository.invest(investment);
     }
+
+    public Customer addIncome(long id, double income){
+        return customerRepository.addIncome(id, income);
+    }
+
+    public List<InvestmentDto> findAllInvestments(long id){
+        return customerRepository.findAllInvestmentsById(id);
+    }
+
+    public List<Point> getAllPendingPoints(long id){
+        updatePoints(id);
+        return customerRepository.findAllPendingById(id);
+    }
+
+    public List<Point> getAllAvailablePoints(long id){
+        updatePoints(id);
+        return customerRepository.findAllAvailableById(id);
+    }
+
     private boolean isValidSpendings(long id) {
         double spendings = transactionRepository.findSumOrderByDate(id);
         return spendings >= 500;
@@ -48,7 +68,7 @@ public class CustomerService {
     private boolean isValidLastTransaction(long id) {
         LocalDate lastTransactionDate = transactionRepository.findTransactionOrderByDate(id);
         LocalDate fiveWeekAgoDate = LocalDate.now().minusWeeks(5);
-        return fiveWeekAgoDate.compareTo(lastTransactionDate) >= 0;
+        return lastTransactionDate.compareTo(fiveWeekAgoDate) >= 0;
     }
 
     private boolean isValidWeeklyTransactions(long id) {
@@ -68,14 +88,7 @@ public class CustomerService {
 
         if (isValidWeeklyTransactions(id) && isValidSpendings(id)){
             List<Transaction> lastWeekTransactions = transactionRepository.findAllOrderByDate(id);
-            List<Point> points = customer.getPoints();
-            for(Transaction transaction : lastWeekTransactions){
-                for (Point point : points){
-                    if (transaction.getId() == point.getTransactionId()){
-                        point.activate();
-                    }
-                }
-            }
+            customerRepository.activateLastWeekPoints(customer, lastWeekTransactions);
         }
     }
 }

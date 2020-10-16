@@ -4,6 +4,7 @@ import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.InMemory;
 import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -13,10 +14,13 @@ import java.util.List;
 @Repository
 public class TransactionRepository implements InMemory<Transaction>, TransactionRepositoryInMemory {
 
-    List<Transaction> transactions = new ArrayList<>();
+    List<Transaction> transactions;
 
     @Override
     public long add(Transaction transaction) {
+        if (transactions == null){
+            transactions = new ArrayList<>();
+        }
         transaction.setId(transactions.size());
         transactions.add(transaction);
         return transaction.getId();
@@ -24,7 +28,7 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public Transaction findById(long id) {
-        if (transactions.size() == 0){
+        if (transactions == null){
             throw new TransactionNotFoundException();
         }
         for (Transaction transaction: transactions) {
@@ -37,8 +41,8 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public double findSumOrderByDate(long id) {
-        if (transactions.size() == 0){
-            throw new TransactionNotFoundException();
+        if (transactions == null){
+            return 0;
         }
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         if (customerTransactions.size() == 0){
@@ -51,11 +55,18 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
     @Override
     public LocalDate findTransactionOrderByDate(long id) {
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
+        if (customerTransactions.size() == 0){
+            throw new TransactionNotFoundException();
+        }
         return customerTransactions.get(customerTransactions.size() - 1).getDate();
     }
 
     @Override
     public List<Transaction> findAllOrderByCustomer(long id) {
+        if (transactions == null){
+            return new ArrayList<>();
+        }
+
         List<Transaction> customerTransactions = new ArrayList<>();
         for(Transaction transaction : transactions){
             if (transaction.getSenderId() == id){

@@ -1,6 +1,7 @@
 package com.rbi.loyaltysystem.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
  * @author Dionysios Stolis 10/15/2020 <dstolis@b-open.com>
  */
 @Getter
+@Setter
 public class Point {
 
     private Status status;
@@ -32,18 +34,12 @@ public class Point {
         return points * 0.01;
     }
 
-    public void activate(){
+    public void activate() {
         this.status = Status.AVAILABLE;
     }
 
-    @Override
-    public String toString() {
-        return "Point{" +
-                "status=" + status +
-                ", amount=" + amount +
-                ", date=" + date +
-                ", earnings=" + earnings+"€" +
-                ", transactionId=" + transactionId +
-                '}';
+    public void deactivate() {
+        this.status = Status.SPENT;
+        this.earnings = 0;
     }
 }

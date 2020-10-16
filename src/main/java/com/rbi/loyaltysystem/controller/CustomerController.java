@@ -1,19 +1,20 @@
 package com.rbi.loyaltysystem.controller;
 
-import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
-import com.rbi.loyaltysystem.exception.TransactionalException;
+import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.model.Customer;
+import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/customers")
 public class CustomerController {
-    //TODO NA MPOREI O XRISTIS NA PROSTHETEI TO ISODIMA TOU KAI NA PERNEI POINTS MONO APO ESWTERIKES SUNALLAGES
-    //TODO NA FTIAKSW METHODO I OPIA THA KSODEUEI TA POINTS TOU SE EPENDISEIS SE STOCK KAI FOREX
+
     private CustomerService customerService;
 
     @Autowired
@@ -28,17 +29,31 @@ public class CustomerController {
 
     @GetMapping
     public Customer getCustomer(@RequestParam Long id) {
-
         return customerService.getCustomer(id);
     }
 
-    @GetMapping(path = "/details")
-    public Customer getCustomerDetails(@RequestParam Long id) {
-        return customerService.getDetails(id);
+    @PostMapping(path = "/invest")
+    public ResponseEntity<InvestmentDto> investPoints(@RequestBody final InvestmentDto investment) {
+        return ResponseEntity.ok(customerService.invest(investment));
     }
 
-    //GET AVALIABLE POINTS
-    //GET PENDING POINTS
-    //ADD INCOME
-    //ADD INVEST POINTS IN STOCKS/FOREX
+    @GetMapping(path = "/invest")
+    public ResponseEntity<List<InvestmentDto>> getInvestments(@RequestParam final long id) {
+        return ResponseEntity.ok(customerService.findAllInvestments(id));
+    }
+
+    @PostMapping(path = "/income")
+    public ResponseEntity<Customer> addIncome(@RequestParam final long id, final double income){
+        return ResponseEntity.ok(customerService.addIncome(id, income));
+    }
+
+    @GetMapping(path = "/available/points")
+    public ResponseEntity<List<Point>> getAvailablePoints(@RequestParam final long id) {
+        return ResponseEntity.ok(customerService.getAllAvailablePoints(id));
+    }
+
+    @GetMapping(path = "/pending/points")
+    public ResponseEntity<List<Point>> getPendingPoints(@RequestParam final long id) {
+        return ResponseEntity.ok(customerService.getAllPendingPoints(id));
+    }
 }

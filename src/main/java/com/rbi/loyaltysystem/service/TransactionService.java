@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -40,11 +41,11 @@ public class TransactionService {
                 throw new TransactionalException();
             }
 
-            if (sender.getId() == recipient.getId()){
+            if (sender.getId() == recipient.getId()) {
                 throw new TransactionalException();
             }
 
-            if (transaction.getAmount() < 0){
+            if (transaction.getAmount() < 0) {
                 throw new TransactionalException();
             }
 
@@ -59,6 +60,10 @@ public class TransactionService {
 
             customerRepository.update(sender);
         }
+    }
+
+    public List<Transaction> getTransactions(long id) {
+        return transactionRepository.findAllOrderByCustomer(id);
     }
 
     private int calculatePoints(double amount) {

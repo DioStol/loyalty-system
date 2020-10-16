@@ -11,6 +11,7 @@ public interface CustomerRepositoryInMemory {
     List<Point> findAllPendingById(long id);
     List<Point> findAllAvailableById(long id);
     List<InvestmentDto> findAllInvestmentsById(long id);
-    void invest(InvestmentDto investment);
+    InvestmentDto invest(InvestmentDto investment);
     void update(Customer customer);
+    Customer addIncome(long id, double income);
 }
