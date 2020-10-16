@@ -28,10 +28,59 @@ First of all you need to clone the project, and run it!
 
 POST http://localhost:8080/v1/customers/register
 
-*Request body*
+*Request body:*
 ```json
 {
     "name":"Your name",
     "balance":10000
 }
 ```
+*Response: * customer id
+
+
+#### Customer info
+
+GET http://localhost:8080/v1/customers?id=0
+
+*Request param: customer id* 
+
+*Response:*
+```json    
+{
+    "id": 0,
+    "name": "Your name",
+    "balance": 1001020.0
+}
+```
+or if you have made some transactions
+```json
+{
+    "id": 0,
+    "name": "Dionysios STOLIS",
+    "balance": 986020.0,
+    "points": [
+        {
+            "status": "PENDING",
+            "amount": 5000,
+            "date": "2020-10-16",
+            "earnings": 50.0,
+            "transactionId": 0
+        },
+        {
+            "status": "PENDING",
+            "amount": 5000,
+            "date": "2020-10-16",
+            "earnings": 50.0,
+            "transactionId": 1
+        },
+        {
+            "status": "PENDING",
+            "amount": 5000,
+            "date": "2020-10-16",
+            "earnings": 50.0,
+            "transactionId": 2
+        }
+    ]
+}
+```
+
