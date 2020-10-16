@@ -73,12 +73,12 @@ public class TransactionService {
         if (amount <= 5000) {
             points = (int) amount;
         } else if (amount <= 7500) {
-            int x =(int) amount - 5000;
+            int x = (int) amount - 5000;
             points = 5000;
             points += x * 2;
         } else {
             points = 10000;
-            int x =(int) amount - 7500;
+            int x = (int) amount - 7500;
             points += x * 3;
         }
         return points;

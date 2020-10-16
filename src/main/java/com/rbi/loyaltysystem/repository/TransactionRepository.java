@@ -17,7 +17,7 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public long add(Transaction transaction) {
-        if (transactions == null){
+        if (transactions == null) {
             transactions = new ArrayList<>();
         }
         transaction.setId(transactions.size());
@@ -27,11 +27,11 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public Transaction findById(long id) {
-        if (transactions == null){
+        if (transactions == null) {
             throw new TransactionNotFoundException();
         }
-        for (Transaction transaction: transactions) {
-            if (transaction.getId() == id){
+        for (Transaction transaction : transactions) {
+            if (transaction.getId() == id) {
                 return transaction;
             }
         }
@@ -40,11 +40,11 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public double findSumOrderByDate(long id) {
-        if (transactions == null){
+        if (transactions == null) {
             return 0;
         }
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
-        if (customerTransactions.isEmpty()){
+        if (customerTransactions.isEmpty()) {
             throw new TransactionNotFoundException();
         }
 
@@ -54,7 +54,7 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
     @Override
     public LocalDate findTransactionOrderByDate(long id) {
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
-        if (customerTransactions.isEmpty()){
+        if (customerTransactions.isEmpty()) {
             throw new TransactionNotFoundException();
         }
         return customerTransactions.get(customerTransactions.size() - 1).getDate();
@@ -62,13 +62,13 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
 
     @Override
     public List<Transaction> findAllOrderByCustomer(long id) {
-        if (transactions == null){
+        if (transactions == null) {
             return new ArrayList<>();
         }
 
         List<Transaction> customerTransactions = new ArrayList<>();
-        for(Transaction transaction : transactions){
-            if (transaction.getSenderId() == id){
+        for (Transaction transaction : transactions) {
+            if (transaction.getSenderId() == id) {
                 customerTransactions.add(transaction);
             }
         }
@@ -80,15 +80,15 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         LocalDate aWeekAgoDate = LocalDate.now().minusWeeks(1);
         List<Transaction> weeklyTransactions = new ArrayList<>();
-        for (Transaction transaction : customerTransactions){
-            if (aWeekAgoDate.compareTo(transaction.getDate()) >= 0){
+        for (Transaction transaction : customerTransactions) {
+            if (transaction.getDate().compareTo(aWeekAgoDate) >= 0) {
                 weeklyTransactions.add(transaction);
             }
         }
         return weeklyTransactions;
     }
 
-    private double getLastWeekSpendings(List<Transaction> transactions){
+    private double getLastWeekSpendings(List<Transaction> transactions) {
         double spendings = 0;
         LocalDate lastWeek = LocalDate.now().minusWeeks(1);
         for (Transaction transaction : transactions) {

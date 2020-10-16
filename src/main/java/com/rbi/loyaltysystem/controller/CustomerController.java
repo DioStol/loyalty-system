@@ -43,7 +43,7 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/income")
-    public ResponseEntity<Customer> addIncome(@RequestParam final long id, final double income){
+    public ResponseEntity<Customer> addIncome(@RequestParam final long id, final double income) {
         return ResponseEntity.ok(customerService.addIncome(id, income));
     }
 

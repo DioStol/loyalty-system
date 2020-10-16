@@ -47,7 +47,7 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
     @Override
     public Customer addIncome(long id, double income) {
         Customer customer = findById(id);
-        if (income < 0){
+        if (income < 0) {
             throw new TransactionalException();
         }
         double balance = customer.getBalance();
@@ -68,8 +68,8 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
         Customer customer = findById(id);
         List<Point> points = customer.getPoints();
         List<Point> pendingPoints = new ArrayList<>();
-        for(Point point : points){
-            if (point.getStatus() == Status.PENDING){
+        for (Point point : points) {
+            if (point.getStatus() == Status.PENDING) {
                 pendingPoints.add(point);
             }
         }
@@ -81,8 +81,8 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
         Customer customer = findById(id);
         List<Point> points = customer.getPoints();
         List<Point> availablePoints = new ArrayList<>();
-        for(Point point : points){
-            if (point.getStatus() == Status.AVAILABLE){
+        for (Point point : points) {
+            if (point.getStatus() == Status.AVAILABLE) {
                 availablePoints.add(point);
             }
         }
@@ -92,8 +92,8 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
     @Override
     public List<Investment> findAllInvestmentsById(long id) {
         List<Investment> customerInvestments = new ArrayList<>();
-        for(Investment invest : investments){
-            if (invest.getCustomerId() == id){
+        for (Investment invest : investments) {
+            if (invest.getCustomerId() == id) {
                 customerInvestments.add(invest);
             }
         }
@@ -103,21 +103,21 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
     @Override
     public Investment invest(Investment investment) {
         Customer customer = findById(investment.getCustomerId());
-//        List<Point> points = findAllAvailableById(investment.getCustomerId());
-//        if (points.isEmpty()){
-//            throw new TransactionalException();
-//        }
-        List<Point> points = customer.getPoints();
+        List<Point> points = findAllAvailableById(investment.getCustomerId());
+        if (points.isEmpty()) {
+            throw new TransactionalException();
+        }
+
         double pointsBalance = getPointsBalance(points);
-        if (investment.getBalance() > pointsBalance){
+        if (investment.getBalance() > pointsBalance) {
             throw new TransactionalException();
         }
         double earnings = 0;
-        for (Point point : points){
+        for (Point point : points) {
             earnings += point.getEarnings();
             point.deactivate();
-            if (earnings >= investment.getBalance()){
-                if (earnings > investment.getBalance()){
+            if (earnings >= investment.getBalance()) {
+                if (earnings > investment.getBalance()) {
                     double difference = earnings - investment.getBalance();
                     point.setEarnings(difference);
                     point.activate();
@@ -134,19 +134,19 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
         return investment;
     }
 
-    private double getPointsBalance(List<Point> points){
+    private double getPointsBalance(List<Point> points) {
         double balance = 0;
-        for (Point point : points){
+        for (Point point : points) {
             balance += point.getEarnings();
         }
         return balance;
     }
 
-    private void updateCustomerPoint(Customer customer, Point point){
+    private void updateCustomerPoint(Customer customer, Point point) {
         List<Point> copiedPoints = customer.getPoints();
         int index = 0;
-        for (int i = 0; i<copiedPoints.size(); i++){
-            if (customer.getPoints().get(i).getTransactionId() == point.getTransactionId()){
+        for (int i = 0; i < copiedPoints.size(); i++) {
+            if (customer.getPoints().get(i).getTransactionId() == point.getTransactionId()) {
                 index = i;
             }
         }
@@ -154,11 +154,11 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
         copiedPoints.get(index).setStatus(point.getStatus());
     }
 
-    public void activateLastWeekPoints(Customer customer, List<Transaction> lastWeekTransactions){
+    public void activateLastWeekPoints(Customer customer, List<Transaction> lastWeekTransactions) {
         List<Point> points = customer.getPoints();
-        for(Transaction transaction : lastWeekTransactions){
-            for (Point point : points){
-                if (transaction.getId() == point.getTransactionId()){
+        for (Transaction transaction : lastWeekTransactions) {
+            for (Point point : points) {
+                if (transaction.getId() == point.getTransactionId()) {
                     point.activate();
                     updateCustomerPoint(customer, point);
                 }

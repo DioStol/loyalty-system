@@ -77,9 +77,9 @@ public class CustomerService {
     }
 
     private boolean isValidWeeklyTransactions(long id) {
-        List<Transaction> transactions = transactionRepository.findAllOrderByDate(id);
+        List<Transaction> lastWeekTransactions = transactionRepository.findAllOrderByDate(id);
         Set<DayOfWeek> daysOfWeek = new HashSet<>();
-        for (Transaction transaction : transactions) {
+        for (Transaction transaction : lastWeekTransactions) {
             daysOfWeek.add(transaction.getDate().getDayOfWeek());
         }
         return daysOfWeek.size() == 7;
