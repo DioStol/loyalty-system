@@ -16,6 +16,8 @@ New pending points become  available points for use at the end of every week if:
 
 -       A user will lose all the points if no transaction was made in the last 5 weeks
 
+-       Every point is worth 1 eurocent
+
 A customer can use available points to invest in stocks, forex, or any other investment that would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
 
 
@@ -94,6 +96,29 @@ POST http://localhost:8080/v1/customers/income?id=0&income=20
 Customer info
 
 #### Make transaction
+
+POST http://localhost:8080/v1/transactions
+
+*Request body:*
+```json
+{
+    "senderId":0,
+    "recipientId":1,
+    "amount":5000
+}
+```
+*Response:* 
+```json
+{
+    "id": 2,
+    "date": "2020-10-16",
+    "senderId": 0,
+    "recipientId": 1,
+    "amount": 5000.0
+}
+```
+
+#### Use earnings from points
 
 POST http://localhost:8080/v1/transactions
 
