@@ -35,7 +35,7 @@ POST http://localhost:8080/v1/customers/register
     "balance":10000
 }
 ```
-*Response: * customer id
+*Response:* customer id
 
 
 #### Customer info
@@ -84,3 +84,34 @@ or if you have made some transactions
 }
 ```
 
+#### Add income
+
+POST http://localhost:8080/v1/customers/income?id=0&income=20
+
+*Request param: customer id, income*
+
+*Response:* 
+Customer info
+
+#### Make transaction
+
+POST http://localhost:8080/v1/customers/register
+
+*Request body:*
+```json
+{
+    "senderId":0,
+    "recipientId":1,
+    "amount":5000
+}
+```
+*Response:* 
+```json
+{
+    "id": 2,
+    "date": "2020-10-16",
+    "senderId": 0,
+    "recipientId": 1,
+    "amount": 5000.0
+}
+```
