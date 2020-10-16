@@ -18,7 +18,7 @@ New pending points become  available points for use at the end of every week if:
 
 -       Every point is worth 1 eurocent
 
-A customer can use available points to invest in stocks, forex, or any other investment that would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
+A customer can use available points to invest in stocks, forex, or any other investment that they would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
 
 
 - ## Usage
