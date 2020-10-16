@@ -19,3 +19,19 @@ New pending points become  available points for use at the end of every week if:
 A customer can use available points to invest in stocks, forex, or any other investment that would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
 
 
+- ## Usage
+
+First of all you need to clone the project, and run it!
+
+
+#### Create customer
+
+POST http://localhost:8080/v1/customers/register
+
+*Request body*
+```json
+{
+    "name":"Your name",
+    "balance":10000
+}
+```
