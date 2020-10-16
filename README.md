@@ -120,23 +120,25 @@ POST http://localhost:8080/v1/transactions
 
 #### Use earnings from points
 
-POST http://localhost:8080/v1/transactions
+POST http://localhost:8080/v1/customers/invest
 
 *Request body:*
 ```json
 {
-    "senderId":0,
-    "recipientId":1,
-    "amount":5000
+    "customerId":0,
+    "description": "Invest in stocks",
+    "balance":5000
 }
 ```
 *Response:* 
 ```json
 {
-    "id": 2,
-    "date": "2020-10-16",
-    "senderId": 0,
-    "recipientId": 1,
-    "amount": 5000.0
+    "id": 0,
+    "description": "Invest in stocks",
+    "balance": 5000.0,
+    "customerId": 0,
+    "date": "2020-10-16"
 }
 ```
+
+
