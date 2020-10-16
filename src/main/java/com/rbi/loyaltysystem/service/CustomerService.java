@@ -1,12 +1,14 @@
 package com.rbi.loyaltysystem.service;
 
 import com.rbi.loyaltysystem.dto.InvestmentDto;
+import com.rbi.loyaltysystem.dto.PointDto;
 import com.rbi.loyaltysystem.model.Customer;
+import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.CustomerRepository;
-import com.rbi.loyaltysystem.repository.api.InMemory;
 import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
+import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,27 +39,30 @@ public class CustomerService {
         return customerRepository.add(customer);
     }
 
-    public InvestmentDto invest(InvestmentDto investment){
+    public Investment invest(Investment investment) {
         updatePoints(investment.getCustomerId());
         return customerRepository.invest(investment);
     }
 
-    public Customer addIncome(long id, double income){
+    public Customer addIncome(long id, double income) {
         return customerRepository.addIncome(id, income);
     }
 
-    public List<InvestmentDto> findAllInvestments(long id){
-        return customerRepository.findAllInvestmentsById(id);
+    public InvestmentDto findAllInvestments(long id) {
+        List<Investment> investments = customerRepository.findAllInvestmentsById(id);
+        return Utils.convertInvestmentsToDto(investments);
     }
 
-    public List<Point> getAllPendingPoints(long id){
+    public PointDto getAllPendingPoints(long id) {
         updatePoints(id);
-        return customerRepository.findAllPendingById(id);
+        List<Point> pendingPoints = customerRepository.findAllPendingById(id);
+        return Utils.convertPointsToDto(pendingPoints);
     }
 
-    public List<Point> getAllAvailablePoints(long id){
+    public PointDto getAllAvailablePoints(long id) {
         updatePoints(id);
-        return customerRepository.findAllAvailableById(id);
+        List<Point> availablePoints = customerRepository.findAllAvailableById(id);
+        return Utils.convertPointsToDto(availablePoints);
     }
 
     private boolean isValidSpendings(long id) {
@@ -74,7 +79,7 @@ public class CustomerService {
     private boolean isValidWeeklyTransactions(long id) {
         List<Transaction> transactions = transactionRepository.findAllOrderByDate(id);
         Set<DayOfWeek> daysOfWeek = new HashSet<>();
-        for (Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             daysOfWeek.add(transaction.getDate().getDayOfWeek());
         }
         return daysOfWeek.size() == 7;
@@ -82,11 +87,11 @@ public class CustomerService {
 
     private void updatePoints(long id) {
         Customer customer = getCustomer(id);
-        if (!isValidLastTransaction(id)){
+        if (!isValidLastTransaction(id)) {
             customer.setPoints(new ArrayList<>());
         }
 
-        if (isValidWeeklyTransactions(id) && isValidSpendings(id)){
+        if (isValidWeeklyTransactions(id) && isValidSpendings(id)) {
             List<Transaction> lastWeekTransactions = transactionRepository.findAllOrderByDate(id);
             customerRepository.activateLastWeekPoints(customer, lastWeekTransactions);
         }

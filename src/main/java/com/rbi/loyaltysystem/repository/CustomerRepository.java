@@ -1,12 +1,8 @@
 package com.rbi.loyaltysystem.repository;
 
-import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
 import com.rbi.loyaltysystem.exception.TransactionalException;
-import com.rbi.loyaltysystem.model.Customer;
-import com.rbi.loyaltysystem.model.Point;
-import com.rbi.loyaltysystem.model.Status;
-import com.rbi.loyaltysystem.model.Transaction;
+import com.rbi.loyaltysystem.model.*;
 import com.rbi.loyaltysystem.repository.api.CustomerRepositoryInMemory;
 import com.rbi.loyaltysystem.repository.api.InMemory;
 import org.springframework.stereotype.Repository;
@@ -21,7 +17,7 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
 
     private List<Customer> customers;
 
-    private List<InvestmentDto> investments;
+    private List<Investment> investments;
 
     public CustomerRepository() {
         this.customers = new ArrayList<>();
@@ -30,7 +26,7 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
 
     @Override
     public Customer findById(long id) {
-        if (customers.size() == 0) {
+        if (customers.isEmpty()) {
             throw new CustomerNotFoundException();
         }
         for (Customer customer : customers) {
@@ -94,9 +90,9 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
     }
 
     @Override
-    public List<InvestmentDto> findAllInvestmentsById(long id) {
-        List<InvestmentDto> customerInvestments = new ArrayList<>();
-        for(InvestmentDto invest : investments){
+    public List<Investment> findAllInvestmentsById(long id) {
+        List<Investment> customerInvestments = new ArrayList<>();
+        for(Investment invest : investments){
             if (invest.getCustomerId() == id){
                 customerInvestments.add(invest);
             }
@@ -105,10 +101,10 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
     }
 
     @Override
-    public InvestmentDto invest(InvestmentDto investment) {
+    public Investment invest(Investment investment) {
         Customer customer = findById(investment.getCustomerId());
 //        List<Point> points = findAllAvailableById(investment.getCustomerId());
-//        if (points.size() == 0){
+//        if (points.isEmpty()){
 //            throw new TransactionalException();
 //        }
         List<Point> points = customer.getPoints();
@@ -120,10 +116,16 @@ public class CustomerRepository implements InMemory<Customer>, CustomerRepositor
         for (Point point : points){
             earnings += point.getEarnings();
             point.deactivate();
-            updateCustomerPoint(customer, point);
-            if (earnings == investment.getBalance()){
+            if (earnings >= investment.getBalance()){
+                if (earnings > investment.getBalance()){
+                    double difference = earnings - investment.getBalance();
+                    point.setEarnings(difference);
+                    point.activate();
+                }
                 break;
             }
+
+            updateCustomerPoint(customer, point);
         }
         //External transaction implementation
         investment.setId(investments.size());

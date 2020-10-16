@@ -5,9 +5,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-/**
- * @author Dionysios Stolis 10/15/2020 <dstolis@b-open.com>
- */
 @Getter
 @Setter
 public class Point {

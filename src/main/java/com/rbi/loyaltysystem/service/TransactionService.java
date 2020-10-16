@@ -1,12 +1,13 @@
 package com.rbi.loyaltysystem.service;
 
+import com.rbi.loyaltysystem.dto.TransactionDto;
 import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.CustomerRepository;
 import com.rbi.loyaltysystem.repository.TransactionRepository;
-import com.rbi.loyaltysystem.repository.api.InMemory;
+import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +63,9 @@ public class TransactionService {
         }
     }
 
-    public List<Transaction> getTransactions(long id) {
-        return transactionRepository.findAllOrderByCustomer(id);
+    public TransactionDto getTransactions(long id) {
+        List<Transaction> transactions = transactionRepository.findAllOrderByCustomer(id);
+        return Utils.convertTransactionsToDto(transactions);
     }
 
     private int calculatePoints(double amount) {
@@ -71,9 +73,13 @@ public class TransactionService {
         if (amount <= 5000) {
             points = (int) amount;
         } else if (amount <= 7500) {
-            points = (int) (5000 + (amount - 5001) * 2);
+            int x =(int) amount - 5000;
+            points = 5000;
+            points += x * 2;
         } else {
-            points = (int) (5000 + (amount - 5000) * 2 + (amount - 75001) * 3);
+            points = 10000;
+            int x =(int) amount - 7500;
+            points += x * 3;
         }
         return points;
     }

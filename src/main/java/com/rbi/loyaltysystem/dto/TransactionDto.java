@@ -1,6 +1,6 @@
 package com.rbi.loyaltysystem.dto;
 
-import com.rbi.loyaltysystem.model.Investment;
+import com.rbi.loyaltysystem.model.Transaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,9 +8,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class InvestmentDto {
+public class TransactionDto {
 
-    private List<Investment> investments;
+    private List<Transaction> transactions;
 
     private double total;
 }

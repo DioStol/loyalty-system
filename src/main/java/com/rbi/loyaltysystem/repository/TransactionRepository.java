@@ -4,7 +4,6 @@ import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.InMemory;
 import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -45,7 +44,7 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
             return 0;
         }
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
-        if (customerTransactions.size() == 0){
+        if (customerTransactions.isEmpty()){
             throw new TransactionNotFoundException();
         }
 
@@ -55,7 +54,7 @@ public class TransactionRepository implements InMemory<Transaction>, Transaction
     @Override
     public LocalDate findTransactionOrderByDate(long id) {
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
-        if (customerTransactions.size() == 0){
+        if (customerTransactions.isEmpty()){
             throw new TransactionNotFoundException();
         }
         return customerTransactions.get(customerTransactions.size() - 1).getDate();

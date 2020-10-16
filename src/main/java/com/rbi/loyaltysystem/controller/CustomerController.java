@@ -1,15 +1,15 @@
 package com.rbi.loyaltysystem.controller;
 
 import com.rbi.loyaltysystem.dto.InvestmentDto;
+import com.rbi.loyaltysystem.dto.PointDto;
 import com.rbi.loyaltysystem.model.Customer;
-import com.rbi.loyaltysystem.model.Point;
+import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/customers")
@@ -33,12 +33,12 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/invest")
-    public ResponseEntity<InvestmentDto> investPoints(@RequestBody final InvestmentDto investment) {
+    public ResponseEntity<Investment> investPoints(@RequestBody final Investment investment) {
         return ResponseEntity.ok(customerService.invest(investment));
     }
 
     @GetMapping(path = "/invest")
-    public ResponseEntity<List<InvestmentDto>> getInvestments(@RequestParam final long id) {
+    public ResponseEntity<InvestmentDto> getInvestments(@RequestParam final long id) {
         return ResponseEntity.ok(customerService.findAllInvestments(id));
     }
 
@@ -48,12 +48,12 @@ public class CustomerController {
     }
 
     @GetMapping(path = "/available/points")
-    public ResponseEntity<List<Point>> getAvailablePoints(@RequestParam final long id) {
+    public ResponseEntity<PointDto> getAvailablePoints(@RequestParam final long id) {
         return ResponseEntity.ok(customerService.getAllAvailablePoints(id));
     }
 
     @GetMapping(path = "/pending/points")
-    public ResponseEntity<List<Point>> getPendingPoints(@RequestParam final long id) {
+    public ResponseEntity<PointDto> getPendingPoints(@RequestParam final long id) {
         return ResponseEntity.ok(customerService.getAllPendingPoints(id));
     }
 }
