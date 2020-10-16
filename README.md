@@ -95,7 +95,7 @@ Customer info
 
 #### Make transaction
 
-POST http://localhost:8080/v1/customers/register
+POST http://localhost:8080/v1/transactions
 
 *Request body:*
 ```json
