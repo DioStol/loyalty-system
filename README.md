@@ -16,6 +16,6 @@ New pending points become  available points for use at the end of every week if:
 
 -       A user will lose all the points if no transaction was made in the last 5 weeks
 
-A customer can use available points to invest in stocks, forex, or any other investment that would like.
+A customer can use available points to invest in stocks, forex, or any other investment that would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
 
 
