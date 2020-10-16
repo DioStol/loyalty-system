@@ -214,22 +214,39 @@ GET http://localhost:8080/v1/customers/pending/points?id=0
 ```
 *Response:* 
 ```json
-[
-	{
-		"status": "PENDING",
-		"amount": 11500,
-		"date": "2020-10-16",
-		"earnings": 115.0,
-		"transactionId": 10
-	},
-	{
-		"status": "PENDING",
-		"amount": 11500,
-		"date": "2020-10-16",
-		"earnings": 115.0,
-		"transactionId": 11
-	}
-]
+{
+    "points": [
+        {
+            "status": "PENDING",
+            "amount": 11500,
+            "date": "2020-10-16",
+            "earnings": 115.0,
+            "transactionId": 7
+        },
+        {
+            "status": "PENDING",
+            "amount": 11500,
+            "date": "2020-10-16",
+            "earnings": 115.0,
+            "transactionId": 8
+        },
+        {
+            "status": "PENDING",
+            "amount": 11500,
+            "date": "2020-10-16",
+            "earnings": 115.0,
+            "transactionId": 9
+        },
+        {
+            "status": "PENDING",
+            "amount": 11500,
+            "date": "2020-10-16",
+            "earnings": 115.0,
+            "transactionId": 10
+        }
+    ],
+    "total": 460.0
+}
 ```
 
 #### Get available points
@@ -240,22 +257,18 @@ GET http://localhost:8080/v1/customers/available/points?id=0
 
 *Response:* 
 ```json
-[
-	{
-		"status": "AVAILABLE",
-		"amount": 11500,
-		"date": "2020-10-16",
-		"earnings": 115.0,
-		"transactionId": 10
-	},
-	{
-		"status": "AVAILABLE",
-		"amount": 11500,
-		"date": "2020-10-16",
-		"earnings": 115.0,
-		"transactionId": 11
-	}
-]
+{
+    "points": [
+        {
+            "status": "AVAILABLE",
+            "amount": 11500,
+            "date": "2020-10-16",
+            "earnings": 55.0,
+            "transactionId": 6
+        }
+    ],
+    "total": 55.0
+}
 ```
 
 
