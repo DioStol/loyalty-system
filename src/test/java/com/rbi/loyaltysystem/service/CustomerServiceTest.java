@@ -54,6 +54,37 @@ public class CustomerServiceTest {
         assertEquals(35, pointDto.getTotal(), 1E-15);
     }
 
+    @Test
+    public void investTest(){
+        mockCustomerRepository();
+        mockTransactionRepository();
+        mockInvestmentRepository();
+        // Given
+        long id = 0;
+        Investment investment = new Investment();
+        investment.setDescription("Test");
+        investment.setBalance(20);
+        // When
+        customerService.invest(investment);
+        PointDto availablePointsDto = customerService.getAllAvailablePoints(id);
+        // Then
+        assertEquals(15, availablePointsDto.getTotal(), 1E-15);
+    }
+
+    @Test
+    public void transactionTest(){
+        mockCustomerRepository();
+        mockTransactionRepository();
+        // Given
+        long id = 0;
+        Transaction transaction = new Transaction();
+        transaction.setAmount(500);
+        transaction.setSenderId(0);
+        transaction.setRecipientId(1);
+        // When
+
+    }
+
     private void mockInvestmentRepository() {
         List<Investment> investments = new ArrayList<>();
         Investment investment = new Investment();

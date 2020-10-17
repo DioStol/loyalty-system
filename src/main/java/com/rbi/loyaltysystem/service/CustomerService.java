@@ -131,7 +131,7 @@ public class CustomerService {
                 }
                 break;
             }
-
+            // External investment transaction
             updateCustomerPoint(customer, point);
         }
         return investmentRepository.insert(investment);
