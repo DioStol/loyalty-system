@@ -71,19 +71,6 @@ public class CustomerServiceTest {
         assertEquals(15, availablePointsDto.getTotal(), 1E-15);
     }
 
-    @Test
-    public void transactionTest(){
-        mockCustomerRepository();
-        mockTransactionRepository();
-        // Given
-        long id = 0;
-        Transaction transaction = new Transaction();
-        transaction.setAmount(500);
-        transaction.setSenderId(0);
-        transaction.setRecipientId(1);
-        // When
-
-    }
 
     private void mockInvestmentRepository() {
         List<Investment> investments = new ArrayList<>();
@@ -119,7 +106,7 @@ public class CustomerServiceTest {
 
         when(customerRepository.findAllPendingById(0)).thenReturn(getPendingPoints());
         when(customerRepository.findAllAvailableById(0)).thenReturn(getAvailablePoints());
-        when(customerService.getCustomer(0)).thenReturn(firstCustomer);
+        when(customerRepository.findById(0)).thenReturn(firstCustomer);
 
         when(customerService.getCustomer(1)).thenReturn(secondCustomer);
     }

@@ -7,6 +7,7 @@ import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.TransactionInMemoryRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
+import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,13 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private final TransactionInMemoryRepository transactionInMemoryRepository;
+    private final TransactionRepository transactionInMemoryRepository;
     private final CustomerRepository customerRepository;
 
     private final Object lockTransaction = new Object();
 
     @Autowired
-    public TransactionService(TransactionInMemoryRepository transactionInMemoryRepository, CustomerRepository customerRepository) {
+    public TransactionService(TransactionRepository transactionInMemoryRepository, CustomerRepository customerRepository) {
         this.transactionInMemoryRepository = transactionInMemoryRepository;
         this.customerRepository = customerRepository;
     }
