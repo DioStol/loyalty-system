@@ -167,6 +167,7 @@ POST http://localhost:8080/v1/customers/invest
     "description": "Invest in stocks",
     "balance":5000
 }
+```
 
 *Response:* 
 ```json
