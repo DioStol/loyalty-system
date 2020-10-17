@@ -8,7 +8,6 @@ import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.CustomerInMemoryRepository;
-import com.rbi.loyaltysystem.repository.InvestmentInMemoryRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.repository.api.InvestmentRepository;
 import com.rbi.loyaltysystem.repository.api.TransactionRepository;
@@ -42,7 +41,7 @@ public class CustomerService {
     }
 
     public Customer addCustomer(Customer customer) {
-        return customerInMemoryRepository.add(customer);
+        return customerInMemoryRepository.insert(customer);
     }
 
     public Customer addIncome(long id, double income) {
@@ -136,7 +135,7 @@ public class CustomerService {
 
             updateCustomerPoint(customer, point);
         }
-        return investmentRepository.add(investment);
+        return investmentRepository.insert(investment);
     }
 
     private double getPointsBalance(List<Point> points) {

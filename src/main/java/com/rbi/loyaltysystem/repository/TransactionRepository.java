@@ -14,7 +14,7 @@ public class TransactionRepository implements Repository<Transaction>, com.rbi.l
     private List<Transaction> transactions;
 
     @Override
-    public Transaction add(Transaction transaction) {
+    public Transaction insert(Transaction transaction) {
         if (transactions == null) {
             transactions = new ArrayList<>();
         }

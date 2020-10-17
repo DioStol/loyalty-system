@@ -51,7 +51,7 @@ public class TransactionService {
             }
 
             transaction.setDate(LocalDate.now());
-            transactionRepository.add(transaction);
+            transactionRepository.insert(transaction);
 
             int points = calculatePoints(transaction.getAmount());
             Point point = new Point(points, transaction.getId());

@@ -29,7 +29,7 @@ public class InvestmentInMemoryRepository implements InvestmentRepository {
     }
 
     @Override
-    public Investment add(Investment investment) {
+    public Investment insert(Investment investment) {
         investment.setId(investments.size());
         investment.setDate(LocalDate.now());
         investments.add(investment);

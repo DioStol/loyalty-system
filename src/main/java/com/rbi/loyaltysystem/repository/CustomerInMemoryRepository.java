@@ -53,7 +53,7 @@ public class CustomerInMemoryRepository implements CustomerRepository {
     }
 
     @Override
-    public Customer add(Customer customer) {
+    public Customer insert(Customer customer) {
         customer.setId(customers.size());
         customers.add(customer);
         return customer;
