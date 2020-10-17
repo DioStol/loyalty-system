@@ -18,7 +18,7 @@ New pending points become  available points for use at the end of every week if:
 
 -       Every point is worth 1 eurocent
 
-A customer can use available points to invest in stocks, forex, or any other investment that they would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
+Customers can use available points to invest in stocks, forex, or any other investment that they would like. In addition, a customer can request for historical data such as cutomer's transactions, available points, pending points, investments and other.
 
 
 - ## Usage
@@ -33,7 +33,7 @@ POST http://localhost:8080/v1/customers/register
 *Request body:*
 ```json
 {
-    "name":"Your name",
+    "name":"Jane Doe",
     "balance":10000
 }
 ```
@@ -50,7 +50,7 @@ GET http://localhost:8080/v1/customers?id=0
 ```json    
 {
     "id": 0,
-    "name": "Your name",
+    "name": "Jane Doe",
     "balance": 1001020.0
 }
 ```
@@ -58,7 +58,7 @@ or if you have made some transactions
 ```json
 {
     "id": 0,
-    "name": "Dionysios STOLIS",
+    "name": "Jane Doe",
     "balance": 986020.0,
     "points": [
         {
@@ -88,7 +88,7 @@ or if you have made some transactions
 
 #### Add income
 
-POST http://localhost:8080/v1/customers/income?id=0&income=20
+PUT http://localhost:8080/v1/customers/income?id=0&income=20
 
 *Request param: customer id, income*
 
@@ -106,7 +106,7 @@ POST http://localhost:8080/v1/transactions
     "recipientId":1,
     "amount":5000
 }
-```
+
 *Response:* 
 ```json
 {
@@ -211,7 +211,7 @@ GET http://localhost:8080/v1/customers/invest?id=0
 GET http://localhost:8080/v1/customers/pending/points?id=0
 
 *Request parameter: customer id*
-```
+
 *Response:* 
 ```json
 {
