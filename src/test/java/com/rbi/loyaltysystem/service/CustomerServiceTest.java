@@ -50,6 +50,7 @@ public class CustomerServiceTest {
         // When
         PointDto pointDto = customerService.getAllAvailablePoints(id);
         // Then
+        assertEquals(7, pointDto.getPoints().size());
         assertEquals(35, pointDto.getTotal(), 1E-15);
     }
 
