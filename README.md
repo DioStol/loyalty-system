@@ -107,6 +107,7 @@ POST http://localhost:8080/v1/transactions
     "recipientId":1,
     "amount":5000
 }
+```
 
 *Response:* 
 ```json
