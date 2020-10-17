@@ -7,7 +7,6 @@ import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.CustomerInMemoryRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.repository.api.InvestmentRepository;
 import com.rbi.loyaltysystem.repository.api.TransactionRepository;
@@ -25,27 +24,27 @@ import java.util.Set;
 @Service
 public class CustomerService {
 
-    private final CustomerRepository customerInMemoryRepository;
+    private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
     private final InvestmentRepository investmentRepository;
 
     @Autowired
-    public CustomerService(CustomerInMemoryRepository customerInMemoryRepository, TransactionRepository transactionRepository, InvestmentRepository investmentRepository) {
-        this.customerInMemoryRepository = customerInMemoryRepository;
+    public CustomerService(CustomerRepository customerRepository, TransactionRepository transactionRepository, InvestmentRepository investmentRepository) {
+        this.customerRepository = customerRepository;
         this.transactionRepository = transactionRepository;
         this.investmentRepository = investmentRepository;
     }
 
     public Customer getCustomer(long id) {
-        return customerInMemoryRepository.findById(id);
+        return customerRepository.findById(id);
     }
 
     public Customer addCustomer(Customer customer) {
-        return customerInMemoryRepository.insert(customer);
+        return customerRepository.insert(customer);
     }
 
     public Customer addIncome(long id, double income) {
-        return customerInMemoryRepository.addIncome(id, income);
+        return customerRepository.addIncome(id, income);
     }
 
     public InvestmentDto findAllInvestments(long id) {
@@ -55,13 +54,13 @@ public class CustomerService {
 
     public PointDto getAllPendingPoints(long id) {
         updatePoints(id);
-        List<Point> pendingPoints = customerInMemoryRepository.findAllPendingById(id);
+        List<Point> pendingPoints = customerRepository.findAllPendingById(id);
         return Utils.convertPointsToDto(pendingPoints);
     }
 
     public PointDto getAllAvailablePoints(long id) {
         updatePoints(id);
-        List<Point> availablePoints = customerInMemoryRepository.findAllAvailableById(id);
+        List<Point> availablePoints = customerRepository.findAllAvailableById(id);
         return Utils.convertPointsToDto(availablePoints);
     }
 
@@ -71,7 +70,7 @@ public class CustomerService {
     }
 
     private boolean isValidLastTransaction(long id) {
-        LocalDate lastTransactionDate = transactionRepository.findTransactionOrderByDate(id);
+        LocalDate lastTransactionDate = transactionRepository.findLastTransactionDateById(id);
         LocalDate fiveWeekAgoDate = LocalDate.now().minusWeeks(5);
         return lastTransactionDate.compareTo(fiveWeekAgoDate) >= 0;
     }
@@ -98,7 +97,7 @@ public class CustomerService {
     }
 
     public void activateLastWeekPoints(Customer customer, List<Transaction> lastWeekTransactions) {
-        List<Point> points = customer.getPoints();
+        List<Point> points = customerRepository.findAllPendingById(customer.getId());
         for (Transaction transaction : lastWeekTransactions) {
             for (Point point : points) {
                 if (transaction.getId() == point.getTransactionId()) {
@@ -110,8 +109,8 @@ public class CustomerService {
     }
 
     public Investment invest(Investment investment){
-        Customer customer = customerInMemoryRepository.findById(investment.getCustomerId());
-        List<Point> points = customerInMemoryRepository.findAllAvailableById(investment.getCustomerId());
+        Customer customer = customerRepository.findById(investment.getCustomerId());
+        List<Point> points = customerRepository.findAllAvailableById(investment.getCustomerId());
         if (points.isEmpty()) {
             throw new TransactionalException();
         }

@@ -50,7 +50,7 @@ public class TransactionRepository implements Repository<Transaction>, com.rbi.l
     }
 
     @Override
-    public LocalDate findTransactionOrderByDate(long id) {
+    public LocalDate findLastTransactionDateById(long id) {
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         if (customerTransactions.isEmpty()) {
             throw new TransactionNotFoundException();

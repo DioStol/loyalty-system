@@ -5,8 +5,8 @@ import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.CustomerInMemoryRepository;
 import com.rbi.loyaltysystem.repository.TransactionRepository;
+import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +17,15 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private TransactionRepository transactionRepository;
-    private CustomerInMemoryRepository customerInMemoryRepository;
+    private final TransactionRepository transactionRepository;
+    private final CustomerRepository customerRepository;
 
     private final Object lockTransaction = new Object();
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository, CustomerInMemoryRepository customerInMemoryRepository) {
+    public TransactionService(TransactionRepository transactionRepository, CustomerRepository customerRepository) {
         this.transactionRepository = transactionRepository;
-        this.customerInMemoryRepository = customerInMemoryRepository;
+        this.customerRepository = customerRepository;
     }
 
     public Transaction transact(Transaction transaction) {
@@ -35,8 +35,8 @@ public class TransactionService {
 
     private void execute(Transaction transaction) {
         synchronized (lockTransaction) {
-            Customer sender = customerInMemoryRepository.findById(transaction.getSenderId());
-            Customer recipient = customerInMemoryRepository.findById(transaction.getRecipientId());
+            Customer sender = customerRepository.findById(transaction.getSenderId());
+            Customer recipient = customerRepository.findById(transaction.getRecipientId());
 
             if (sender.getBalance() < transaction.getAmount()) {
                 throw new TransactionalException();
@@ -59,7 +59,7 @@ public class TransactionService {
             recipient.deposit(transaction.getAmount());
             sender.addPoint(point);
 
-            customerInMemoryRepository.update(sender);
+            customerRepository.update(sender);
         }
     }
 

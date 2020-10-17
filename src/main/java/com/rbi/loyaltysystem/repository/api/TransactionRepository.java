@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransactionRepository extends Repository<Transaction> {
 
-    LocalDate findTransactionOrderByDate(long id);
+    LocalDate findLastTransactionDateById(long id);
     double findSumOrderByDate(long id);
     List<Transaction> findAllOrderByCustomer(long id);
     List<Transaction> findAllOrderByDate(long id);
