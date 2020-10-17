@@ -8,7 +8,10 @@ import java.util.List;
 public interface CustomerRepository extends Repository<Customer> {
 
     List<Point> findAllPendingById(long id);
+
     List<Point> findAllAvailableById(long id);
+
     void update(Customer customer);
+
     Customer addIncome(long id, double income);
 }

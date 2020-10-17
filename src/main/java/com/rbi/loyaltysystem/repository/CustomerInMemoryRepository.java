@@ -60,7 +60,6 @@ public class CustomerInMemoryRepository implements CustomerRepository {
     }
 
 
-
     @Override
     public List<Point> findAllPendingById(long id) {
         Customer customer = findById(id);

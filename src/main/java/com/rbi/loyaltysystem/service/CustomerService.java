@@ -108,7 +108,7 @@ public class CustomerService {
         }
     }
 
-    public Investment invest(Investment investment){
+    public Investment invest(Investment investment) {
         Customer customer = customerRepository.findById(investment.getCustomerId());
         List<Point> points = customerRepository.findAllAvailableById(investment.getCustomerId());
         if (points.isEmpty()) {
