@@ -33,11 +33,12 @@ POST http://localhost:8080/v1/customers/register
 *Request body:*
 ```json
 {
+    "id":0,
     "name":"Jane Doe",
-    "balance":10000
+    "balance":10000.0
 }
 ```
-*Response:* customer id
+*Response: customer id* 
 
 
 #### Customer info
@@ -106,6 +107,7 @@ POST http://localhost:8080/v1/transactions
     "recipientId":1,
     "amount":5000
 }
+```
 
 *Response:* 
 ```json
@@ -166,6 +168,7 @@ POST http://localhost:8080/v1/customers/invest
     "balance":5000
 }
 ```
+
 *Response:* 
 ```json
 {
