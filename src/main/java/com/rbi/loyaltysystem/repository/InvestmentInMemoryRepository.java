@@ -4,6 +4,7 @@ import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.repository.api.InvestmentRepository;
 import org.springframework.stereotype.Repository;
 
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

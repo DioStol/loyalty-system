@@ -1,7 +1,6 @@
 package com.rbi.loyaltysystem.repository.api;
 
 import com.rbi.loyaltysystem.model.Customer;
-import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.model.Point;
 
 import java.util.List;

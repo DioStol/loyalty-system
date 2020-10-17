@@ -5,7 +5,7 @@ import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.TransactionRepository;
+import com.rbi.loyaltysystem.repository.TransactionInMemoryRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionInMemoryRepository transactionInMemoryRepository;
     private final CustomerRepository customerRepository;
 
     private final Object lockTransaction = new Object();
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository, CustomerRepository customerRepository) {
-        this.transactionRepository = transactionRepository;
+    public TransactionService(TransactionInMemoryRepository transactionInMemoryRepository, CustomerRepository customerRepository) {
+        this.transactionInMemoryRepository = transactionInMemoryRepository;
         this.customerRepository = customerRepository;
     }
 
@@ -51,7 +51,7 @@ public class TransactionService {
             }
 
             transaction.setDate(LocalDate.now());
-            transactionRepository.insert(transaction);
+            transactionInMemoryRepository.insert(transaction);
 
             int points = calculatePoints(transaction.getAmount());
             Point point = new Point(points, transaction.getId());
@@ -64,7 +64,7 @@ public class TransactionService {
     }
 
     public TransactionDto getTransactions(long id) {
-        List<Transaction> transactions = transactionRepository.findAllOrderByCustomer(id);
+        List<Transaction> transactions = transactionInMemoryRepository.findAllOrderByCustomer(id);
         return Utils.convertTransactionsToDto(transactions);
     }
 

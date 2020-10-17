@@ -4,10 +4,11 @@ import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.dto.PointDto;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Investment;
+import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.TransactionRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.repository.api.InvestmentRepository;
+import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.doubleThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
         // When
         PointDto pointDto = customerService.getAllAvailablePoints(id);
         // Then
-        assertEquals(3500, pointDto.getTotal(), 1E-15);
+        assertEquals(35, pointDto.getTotal(), 1E-15);
     }
 
     private void mockInvestmentRepository() {
@@ -72,7 +72,27 @@ public class CustomerServiceTest {
         when(investmentRepository.findAllById(1)).thenReturn(investments);
     }
 
-    private void mockTransactionRepository(){
+    private void mockCustomerRepository() {
+
+        Customer firstCustomer = new Customer();
+        firstCustomer.setBalance(10000);
+        firstCustomer.setId(0);
+        firstCustomer.setName("Jane Doe");
+        firstCustomer.setPoints(getPendingPoints());
+
+        Customer secondCustomer = new Customer();
+        secondCustomer.setBalance(10000);
+        secondCustomer.setId(1);
+        secondCustomer.setName("John Doe");
+
+        when(customerRepository.findAllPendingById(0)).thenReturn(getPendingPoints());
+        when(customerRepository.findAllAvailableById(0)).thenReturn(getAvailablePoints());
+        when(customerService.getCustomer(0)).thenReturn(firstCustomer);
+
+        when(customerService.getCustomer(1)).thenReturn(secondCustomer);
+    }
+
+    private void mockTransactionRepository() {
         Transaction transaction = new Transaction();
         transaction.setId(0);
         transaction.setRecipientId(1);
@@ -80,7 +100,7 @@ public class CustomerServiceTest {
         List<Transaction> rightWeeklyTransactions = getRightWeeklyTransactions();
         List<Transaction> wrongWeeklyTransactions = getWrongWeeklyTransactions();
         LocalDate rightLastTransactionDate = rightWeeklyTransactions.get(rightWeeklyTransactions.size() - 1).getDate();
-        LocalDate wrongLastTransactionDate = wrongWeeklyTransactions.get(wrongWeeklyTransactions.size() -1).getDate();
+        LocalDate wrongLastTransactionDate = wrongWeeklyTransactions.get(wrongWeeklyTransactions.size() - 1).getDate();
 
         when(transactionRepository.findAllOrderByDate(0)).thenReturn(rightWeeklyTransactions);
         when(transactionRepository.findLastTransactionDateById(0)).thenReturn(rightLastTransactionDate);
@@ -91,12 +111,32 @@ public class CustomerServiceTest {
         when(transactionRepository.findSumOrderByDate(1)).thenReturn(getLastWeekSpendings(rightWeeklyTransactions));
     }
 
-    private List<Transaction> getRightWeeklyTransactions(){
+    private List<Point> getPendingPoints() {
+        List<Point> pendingPoints = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            Point point = new Point(500,0);
+            pendingPoints.add(point);
+        }
+        return pendingPoints;
+    }
+
+    private List<Point> getAvailablePoints() {
+        List<Point> availablePoints = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            Point point = new Point(500,1);
+            point.activate();
+            availablePoints.add(point);
+        }
+        return availablePoints;
+    }
+
+    private List<Transaction> getRightWeeklyTransactions() {
         List<Transaction> rightWeeklyTransactions = new ArrayList<>();
         LocalDate date = LocalDate.now().minusWeeks(1);
-        for (int i = 0; i<7; i++){
+        for (int i = 0; i < 7; i++) {
             Transaction transaction = new Transaction();
             transaction.setId(0);
+            transaction.setSenderId(0);
             transaction.setRecipientId(1);
             transaction.setAmount(500);
             transaction.setDate(date.plusDays(i));
@@ -116,29 +156,14 @@ public class CustomerServiceTest {
         return spendings;
     }
 
-    private List<Transaction> getWrongWeeklyTransactions(){
+    private List<Transaction> getWrongWeeklyTransactions() {
         Transaction transaction = new Transaction();
         List<Transaction> transactions = new ArrayList<>();
-        transaction.setId(0);
-        transaction.setRecipientId(1);
+        transaction.setId(1);
+        transaction.setRecipientId(0);
+        transaction.setSenderId(1);
         transaction.setAmount(500);
         transactions.add(transaction);
         return transactions;
-    }
-
-    private void mockCustomerRepository(){
-
-        Customer firstCustomer = new Customer();
-        firstCustomer.setBalance(10000);
-        firstCustomer.setId(0);
-        firstCustomer.setName("Jane Doe");
-
-        Customer secondCustomer = new Customer();
-        secondCustomer.setBalance(10000);
-        secondCustomer.setId(1);
-        secondCustomer.setName("John Doe");
-
-        when(customerService.getCustomer(0)).thenReturn(firstCustomer);
-        when(customerService.getCustomer(1)).thenReturn(secondCustomer);
     }
 }

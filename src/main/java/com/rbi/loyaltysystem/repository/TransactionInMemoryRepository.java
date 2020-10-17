@@ -3,13 +3,14 @@ package com.rbi.loyaltysystem.repository;
 import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.Repository;
+import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Repository
-public class TransactionRepository implements Repository<Transaction>, com.rbi.loyaltysystem.repository.api.TransactionRepository {
+public class TransactionInMemoryRepository implements Repository<Transaction>, TransactionRepository {
 
     private List<Transaction> transactions;
 
