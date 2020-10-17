@@ -1,7 +1,7 @@
 package com.rbi.loyaltysystem.repository.api;
 
-public interface InMemory<T> {
+public interface Repository<T> {
 
-    long add(T object);
+    T add(T object);
     T findById(long id);
 }

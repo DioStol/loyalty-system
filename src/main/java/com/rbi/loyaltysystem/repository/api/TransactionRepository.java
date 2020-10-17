@@ -5,7 +5,7 @@ import com.rbi.loyaltysystem.model.Transaction;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TransactionRepositoryInMemory {
+public interface TransactionRepository extends Repository<Transaction> {
 
     LocalDate findTransactionOrderByDate(long id);
     double findSumOrderByDate(long id);

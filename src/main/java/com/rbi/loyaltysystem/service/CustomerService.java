@@ -2,12 +2,16 @@ package com.rbi.loyaltysystem.service;
 
 import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.dto.PointDto;
+import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.CustomerRepository;
-import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
+import com.rbi.loyaltysystem.repository.CustomerInMemoryRepository;
+import com.rbi.loyaltysystem.repository.InvestmentInMemoryRepository;
+import com.rbi.loyaltysystem.repository.api.CustomerRepository;
+import com.rbi.loyaltysystem.repository.api.InvestmentRepository;
+import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,46 +26,43 @@ import java.util.Set;
 @Service
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
-    private TransactionRepositoryInMemory transactionRepository;
+    private final CustomerRepository customerInMemoryRepository;
+    private final TransactionRepository transactionRepository;
+    private final InvestmentRepository investmentRepository;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, TransactionRepositoryInMemory transactionRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerService(CustomerInMemoryRepository customerInMemoryRepository, TransactionRepository transactionRepository, InvestmentRepository investmentRepository) {
+        this.customerInMemoryRepository = customerInMemoryRepository;
         this.transactionRepository = transactionRepository;
+        this.investmentRepository = investmentRepository;
     }
 
     public Customer getCustomer(long id) {
-        return customerRepository.findById(id);
+        return customerInMemoryRepository.findById(id);
     }
 
-    public long addCustomer(Customer customer) {
-        return customerRepository.add(customer);
-    }
-
-    public Investment invest(Investment investment) {
-        updatePoints(investment.getCustomerId());
-        return customerRepository.invest(investment);
+    public Customer addCustomer(Customer customer) {
+        return customerInMemoryRepository.add(customer);
     }
 
     public Customer addIncome(long id, double income) {
-        return customerRepository.addIncome(id, income);
+        return customerInMemoryRepository.addIncome(id, income);
     }
 
     public InvestmentDto findAllInvestments(long id) {
-        List<Investment> investments = customerRepository.findAllInvestmentsById(id);
+        List<Investment> investments = investmentRepository.findAllById(id);
         return Utils.convertInvestmentsToDto(investments);
     }
 
     public PointDto getAllPendingPoints(long id) {
         updatePoints(id);
-        List<Point> pendingPoints = customerRepository.findAllPendingById(id);
+        List<Point> pendingPoints = customerInMemoryRepository.findAllPendingById(id);
         return Utils.convertPointsToDto(pendingPoints);
     }
 
     public PointDto getAllAvailablePoints(long id) {
         updatePoints(id);
-        List<Point> availablePoints = customerRepository.findAllAvailableById(id);
+        List<Point> availablePoints = customerInMemoryRepository.findAllAvailableById(id);
         return Utils.convertPointsToDto(availablePoints);
     }
 
@@ -93,7 +94,68 @@ public class CustomerService {
 
         if (isValidWeeklyTransactions(id) && isValidSpendings(id)) {
             List<Transaction> lastWeekTransactions = transactionRepository.findAllOrderByDate(id);
-            customerRepository.activateLastWeekPoints(customer, lastWeekTransactions);
+            activateLastWeekPoints(customer, lastWeekTransactions);
         }
+    }
+
+    public void activateLastWeekPoints(Customer customer, List<Transaction> lastWeekTransactions) {
+        List<Point> points = customer.getPoints();
+        for (Transaction transaction : lastWeekTransactions) {
+            for (Point point : points) {
+                if (transaction.getId() == point.getTransactionId()) {
+                    point.activate();
+                    updateCustomerPoint(customer, point);
+                }
+            }
+        }
+    }
+
+    public Investment invest(Investment investment){
+        Customer customer = customerInMemoryRepository.findById(investment.getCustomerId());
+        List<Point> points = customerInMemoryRepository.findAllAvailableById(investment.getCustomerId());
+        if (points.isEmpty()) {
+            throw new TransactionalException();
+        }
+
+        double pointsBalance = getPointsBalance(points);
+        if (investment.getBalance() > pointsBalance) {
+            throw new TransactionalException();
+        }
+        double earnings = 0;
+        for (Point point : points) {
+            earnings += point.getEarnings();
+            point.deactivate();
+            if (earnings >= investment.getBalance()) {
+                if (earnings > investment.getBalance()) {
+                    double difference = earnings - investment.getBalance();
+                    point.setEarnings(difference);
+                    point.activate();
+                }
+                break;
+            }
+
+            updateCustomerPoint(customer, point);
+        }
+        return investmentRepository.add(investment);
+    }
+
+    private double getPointsBalance(List<Point> points) {
+        double balance = 0;
+        for (Point point : points) {
+            balance += point.getEarnings();
+        }
+        return balance;
+    }
+
+    private void updateCustomerPoint(Customer customer, Point point) {
+        List<Point> copiedPoints = customer.getPoints();
+        int index = 0;
+        for (int i = 0; i < copiedPoints.size(); i++) {
+            if (customer.getPoints().get(i).getTransactionId() == point.getTransactionId()) {
+                index = i;
+            }
+        }
+        copiedPoints.get(index).setEarnings(point.getEarnings());
+        copiedPoints.get(index).setStatus(point.getStatus());
     }
 }

@@ -2,27 +2,25 @@ package com.rbi.loyaltysystem.repository;
 
 import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.api.InMemory;
-import com.rbi.loyaltysystem.repository.api.TransactionRepositoryInMemory;
-import org.springframework.stereotype.Repository;
+import com.rbi.loyaltysystem.repository.api.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class TransactionRepository implements InMemory<Transaction>, TransactionRepositoryInMemory {
+@org.springframework.stereotype.Repository
+public class TransactionRepository implements Repository<Transaction>, com.rbi.loyaltysystem.repository.api.TransactionRepository {
 
-    List<Transaction> transactions;
+    private List<Transaction> transactions;
 
     @Override
-    public long add(Transaction transaction) {
+    public Transaction add(Transaction transaction) {
         if (transactions == null) {
             transactions = new ArrayList<>();
         }
         transaction.setId(transactions.size());
         transactions.add(transaction);
-        return transaction.getId();
+        return transaction;
     }
 
     @Override

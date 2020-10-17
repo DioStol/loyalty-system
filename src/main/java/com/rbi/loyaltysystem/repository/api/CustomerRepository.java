@@ -6,12 +6,10 @@ import com.rbi.loyaltysystem.model.Point;
 
 import java.util.List;
 
-public interface CustomerRepositoryInMemory {
+public interface CustomerRepository extends Repository<Customer> {
 
     List<Point> findAllPendingById(long id);
     List<Point> findAllAvailableById(long id);
-    List<Investment> findAllInvestmentsById(long id);
-    Investment invest(Investment investment);
     void update(Customer customer);
     Customer addIncome(long id, double income);
 }

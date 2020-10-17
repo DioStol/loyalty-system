@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/customers")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -23,7 +23,7 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> registerNewCustomer(@RequestBody final Customer customer) {
+    public ResponseEntity<Customer> registerNewCustomer(@RequestBody final Customer customer) {
         return ResponseEntity.ok(customerService.addCustomer(customer));
     }
 
@@ -42,7 +42,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.findAllInvestments(id));
     }
 
-    @PostMapping(path = "/income")
+    @PutMapping(path = "/income")
     public ResponseEntity<Customer> addIncome(@RequestParam final long id, final double income) {
         return ResponseEntity.ok(customerService.addIncome(id, income));
     }
