@@ -123,7 +123,7 @@ POST http://localhost:8080/v1/transactions
 
 GET http://localhost:8080/v1/transactions?id=0
 
-*Request body: custmoer id*
+*Request param: custmoer id*
 
 *Response:* 
 ```json
