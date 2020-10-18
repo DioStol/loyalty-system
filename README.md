@@ -33,7 +33,6 @@ POST http://localhost:8080/v1/customers/register
 *Request body:*
 ```json
 {
-    "id":0,
     "name":"Jane Doe",
     "balance":10000.0
 }
@@ -124,7 +123,7 @@ POST http://localhost:8080/v1/transactions
 
 GET http://localhost:8080/v1/transactions?id=0
 
-*Request body: custmoer id*
+*Request param: custmoer id*
 
 *Response:* 
 ```json
@@ -184,7 +183,7 @@ POST http://localhost:8080/v1/customers/invest
 
 GET http://localhost:8080/v1/customers/invest?id=0
 
-*Request body: customer id*
+*Request param: customer id*
 
 *Response:* 
 ```json
@@ -213,7 +212,7 @@ GET http://localhost:8080/v1/customers/invest?id=0
 
 GET http://localhost:8080/v1/customers/pending/points?id=0
 
-*Request parameter: customer id*
+*Request param: customer id*
 
 *Response:* 
 ```json
@@ -256,7 +255,7 @@ GET http://localhost:8080/v1/customers/pending/points?id=0
 
 GET http://localhost:8080/v1/customers/available/points?id=0
 
-*Request parameter: customer id*
+*Request param: customer id*
 
 *Response:* 
 ```json
