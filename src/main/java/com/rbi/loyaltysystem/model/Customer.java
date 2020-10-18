@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.rbi.loyaltysystem.util.Utils.LOWER_BALANCE;
+import static com.rbi.loyaltysystem.util.Utils.NEGATIVE_AMOUNT;
+
 @Getter
 @Setter
 public class Customer {
@@ -27,7 +30,7 @@ public class Customer {
 
     public void deposit(double amount) {
         if (amount < 0) {
-            throw new TransactionalException();
+            throw new TransactionalException(NEGATIVE_AMOUNT);
         }
 
         balance += amount;
@@ -35,7 +38,7 @@ public class Customer {
 
     public void withdraw(double amount) {
         if (balance < amount) {
-            throw new TransactionalException();
+            throw new TransactionalException(LOWER_BALANCE);
         }
 
         balance -= amount;

@@ -12,23 +12,39 @@ import java.util.List;
 
 public class Utils {
 
-    public static InvestmentDto convertInvestmentsToDto(List<Investment> investments){
+    public static final String NEGATIVE_AMOUNT = "Can not transfer negative amount";
+
+    public static final String NOT_AVAILABLE_CUSTOMERS = "There are not available customers";
+
+    public static final String CUSTOMER_DOES_NOT_EXISTS = "Customer does not exists";
+
+    public static final String LOWER_BALANCE = "Your balance is lower than the given amount";
+
+    public static final String NOT_AVAILABLE_TRANSACTIONS = "There are not available transactions";
+
+    public static final String TRANSACTION_DOES_NOT_EXISTS = "Transaction does not exists";
+
+    public static final String NOT_AVAILABLE_POINTS = "There are not available points";
+
+    public static final String TRANSFER_TO_SAME_ACCOUNT = "Can not transfer money to the same account id";
+
+    public static InvestmentDto convertInvestmentsToDto(List<Investment> investments) {
         double total = 0;
-        for(Investment investment : investments){
+        for (Investment investment : investments) {
             total += investment.getBalance();
         }
         return new InvestmentDto(investments, total);
     }
 
-    public static PointDto convertPointsToDto(List<Point> points){
+    public static PointDto convertPointsToDto(List<Point> points) {
         double total = 0;
-        for(Point point : points){
+        for (Point point : points) {
             total += point.getEarnings();
         }
         return new PointDto(points, total);
     }
 
-    public static TransactionDto convertTransactionsToDto(List<Transaction> transactions){
+    public static TransactionDto convertTransactionsToDto(List<Transaction> transactions) {
         double total = 0;
         for (Transaction transaction : transactions) {
             total += transaction.getAmount();

@@ -4,6 +4,7 @@ import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
 import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.*;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
+import com.rbi.loyaltysystem.util.Utils;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ public class CustomerInMemoryRepository implements CustomerRepository {
 
     private final List<Customer> customers;
 
-
     public CustomerInMemoryRepository() {
         this.customers = new ArrayList<>();
     }
@@ -23,14 +23,14 @@ public class CustomerInMemoryRepository implements CustomerRepository {
     @Override
     public Customer findById(long id) {
         if (customers.isEmpty()) {
-            throw new CustomerNotFoundException();
+            throw new CustomerNotFoundException(Utils.NOT_AVAILABLE_CUSTOMERS);
         }
         for (Customer customer : customers) {
             if (customer.getId() == id) {
                 return customer;
             }
         }
-        throw new CustomerNotFoundException();
+        throw new CustomerNotFoundException(Utils.CUSTOMER_DOES_NOT_EXISTS);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CustomerInMemoryRepository implements CustomerRepository {
     public Customer addIncome(long id, double income) {
         Customer customer = findById(id);
         if (income < 0) {
-            throw new TransactionalException();
+            throw new TransactionalException(Utils.NEGATIVE_AMOUNT);
         }
         double balance = customer.getBalance();
         balance += income;

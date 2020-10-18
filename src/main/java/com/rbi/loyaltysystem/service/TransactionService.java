@@ -40,15 +40,15 @@ public class TransactionService {
             Customer recipient = customerRepository.findById(transaction.getRecipientId());
 
             if (sender.getBalance() < transaction.getAmount()) {
-                throw new TransactionalException();
+                throw new TransactionalException(Utils.LOWER_BALANCE);
             }
 
             if (sender.getId() == recipient.getId()) {
-                throw new TransactionalException();
+                throw new TransactionalException(Utils.TRANSFER_TO_SAME_ACCOUNT);
             }
 
             if (transaction.getAmount() < 0) {
-                throw new TransactionalException();
+                throw new TransactionalException(Utils.NEGATIVE_AMOUNT);
             }
 
             transaction.setDate(LocalDate.now());

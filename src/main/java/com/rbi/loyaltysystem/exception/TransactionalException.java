@@ -7,4 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseBody
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad transaction data, try again!")
 public class TransactionalException extends RuntimeException {
+
+    public TransactionalException(String msg){
+        super(msg);
+    }
 }

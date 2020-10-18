@@ -112,12 +112,12 @@ public class CustomerService {
         Customer customer = customerRepository.findById(investment.getCustomerId());
         List<Point> points = customerRepository.findAllAvailableById(investment.getCustomerId());
         if (points.isEmpty()) {
-            throw new TransactionalException();
+            throw new TransactionalException(Utils.NOT_AVAILABLE_POINTS);
         }
 
         double pointsBalance = getPointsBalance(points);
         if (investment.getBalance() > pointsBalance) {
-            throw new TransactionalException();
+            throw new TransactionalException(Utils.LOWER_BALANCE);
         }
         double earnings = 0;
         for (Point point : points) {

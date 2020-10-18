@@ -2,13 +2,19 @@ package com.rbi.loyaltysystem.controller;
 
 import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.dto.PointDto;
+import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
+import com.rbi.loyaltysystem.exception.ExceptionResponse;
+import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Investment;
 import com.rbi.loyaltysystem.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -55,5 +61,17 @@ public class CustomerController {
     @GetMapping(path = "/pending/points")
     public ResponseEntity<PointDto> getPendingPoints(@RequestParam final long id) {
         return ResponseEntity.ok(customerService.getAllPendingPoints(id));
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<?> notFoundException(HttpServletRequest request, CustomerNotFoundException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TransactionalException.class)
+    public ResponseEntity<?> badTransactionException(HttpServletRequest request, TransactionalException e){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

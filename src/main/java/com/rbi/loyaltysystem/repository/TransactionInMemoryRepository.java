@@ -4,6 +4,7 @@ import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
 import com.rbi.loyaltysystem.repository.api.Repository;
 import com.rbi.loyaltysystem.repository.api.TransactionRepository;
+import com.rbi.loyaltysystem.util.Utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,14 +28,14 @@ public class TransactionInMemoryRepository implements Repository<Transaction>, T
     @Override
     public Transaction findById(long id) {
         if (transactions == null) {
-            throw new TransactionNotFoundException();
+            throw new TransactionNotFoundException(Utils.NOT_AVAILABLE_TRANSACTIONS);
         }
         for (Transaction transaction : transactions) {
             if (transaction.getId() == id) {
                 return transaction;
             }
         }
-        throw new TransactionNotFoundException();
+        throw new TransactionNotFoundException(Utils.TRANSACTION_DOES_NOT_EXISTS);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class TransactionInMemoryRepository implements Repository<Transaction>, T
         }
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         if (customerTransactions.isEmpty()) {
-            throw new TransactionNotFoundException();
+            throw new TransactionNotFoundException(Utils.NOT_AVAILABLE_TRANSACTIONS);
         }
 
         return getLastWeekSpendings(customerTransactions);
@@ -54,7 +55,7 @@ public class TransactionInMemoryRepository implements Repository<Transaction>, T
     public LocalDate findLastTransactionDateById(long id) {
         List<Transaction> customerTransactions = findAllOrderByCustomer(id);
         if (customerTransactions.isEmpty()) {
-            throw new TransactionNotFoundException();
+            throw new TransactionNotFoundException(Utils.NOT_AVAILABLE_TRANSACTIONS);
         }
         return customerTransactions.get(customerTransactions.size() - 1).getDate();
     }
