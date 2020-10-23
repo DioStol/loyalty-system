@@ -30,12 +30,10 @@ public class TransactionInMemoryRepository implements Repository<Transaction>, T
         if (transactions == null) {
             throw new TransactionNotFoundException(Utils.NOT_AVAILABLE_TRANSACTIONS);
         }
-        for (Transaction transaction : transactions) {
-            if (transaction.getId() == id) {
-                return transaction;
-            }
+        if (transactions.size() >= id || id <= 0){
+            throw new TransactionNotFoundException(Utils.TRANSACTION_DOES_NOT_EXISTS);
         }
-        throw new TransactionNotFoundException(Utils.TRANSACTION_DOES_NOT_EXISTS);
+        return transactions.get((int) --id);
     }
 
     @Override

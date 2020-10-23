@@ -28,6 +28,8 @@ public class Utils {
 
     public static final String TRANSFER_TO_SAME_ACCOUNT = "Can not transfer money to the same account id";
 
+    public static final String INVESTMENT_DOES_NOT_EXISTS = "Investment does not exists";
+
     public static InvestmentDto convertInvestmentsToDto(List<Investment> investments) {
         double total = 0;
         for (Investment investment : investments) {

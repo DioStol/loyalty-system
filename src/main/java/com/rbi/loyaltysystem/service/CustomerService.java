@@ -2,6 +2,7 @@ package com.rbi.loyaltysystem.service;
 
 import com.rbi.loyaltysystem.dto.InvestmentDto;
 import com.rbi.loyaltysystem.dto.PointDto;
+import com.rbi.loyaltysystem.exception.CustomerNotFoundException;
 import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Investment;
