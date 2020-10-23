@@ -5,7 +5,6 @@ import com.rbi.loyaltysystem.exception.TransactionalException;
 import com.rbi.loyaltysystem.model.Customer;
 import com.rbi.loyaltysystem.model.Point;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.TransactionInMemoryRepository;
 import com.rbi.loyaltysystem.repository.api.CustomerRepository;
 import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 import com.rbi.loyaltysystem.util.Utils;
@@ -18,14 +17,12 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private final TransactionRepository transactionInMemoryRepository;
+    private final TransactionRepository transactionRepository;
     private final CustomerRepository customerRepository;
 
-    private final Object lockTransaction = new Object();
-
     @Autowired
-    public TransactionService(TransactionRepository transactionInMemoryRepository, CustomerRepository customerRepository) {
-        this.transactionInMemoryRepository = transactionInMemoryRepository;
+    public TransactionService(TransactionRepository transactionRepository, CustomerRepository customerRepository) {
+        this.transactionRepository = transactionRepository;
         this.customerRepository = customerRepository;
     }
 
@@ -34,25 +31,26 @@ public class TransactionService {
         return transaction;
     }
 
-    private void execute(Transaction transaction) {
-        synchronized (lockTransaction) {
-            Customer sender = customerRepository.findById(transaction.getSenderId());
-            Customer recipient = customerRepository.findById(transaction.getRecipientId());
+    private void execute(final Transaction transaction) {
+        Customer sender = customerRepository.findById(transaction.getSenderId());
+        Customer recipient = customerRepository.findById(transaction.getRecipientId());
 
-            if (sender.getBalance() < transaction.getAmount()) {
-                throw new TransactionalException(Utils.LOWER_BALANCE);
-            }
+        if (sender.getBalance() < transaction.getAmount()) {
+            throw new TransactionalException(Utils.LOWER_BALANCE);
+        }
 
-            if (sender.getId() == recipient.getId()) {
-                throw new TransactionalException(Utils.TRANSFER_TO_SAME_ACCOUNT);
-            }
+        if (sender.getId() == recipient.getId()) {
+            throw new TransactionalException(Utils.TRANSFER_TO_SAME_ACCOUNT);
+        }
 
-            if (transaction.getAmount() < 0) {
-                throw new TransactionalException(Utils.NEGATIVE_AMOUNT);
-            }
+        if (transaction.getAmount() < 0) {
+            throw new TransactionalException(Utils.NEGATIVE_AMOUNT);
+        }
+
+        synchronized (transaction) {
 
             transaction.setDate(LocalDate.now());
-            transactionInMemoryRepository.insert(transaction);
+            transactionRepository.insert(transaction);
 
             int points = calculatePoints(transaction.getAmount());
             Point point = new Point(points, transaction.getId());
@@ -65,7 +63,7 @@ public class TransactionService {
     }
 
     public TransactionDto getTransactions(long id) {
-        List<Transaction> transactions = transactionInMemoryRepository.findAllOrderByCustomer(id);
+        List<Transaction> transactions = transactionRepository.findAllOrderByCustomer(id);
         return Utils.convertTransactionsToDto(transactions);
     }
 
