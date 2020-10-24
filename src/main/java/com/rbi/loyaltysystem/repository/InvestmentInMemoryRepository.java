@@ -47,6 +47,6 @@ public class InvestmentInMemoryRepository implements InvestmentRepository {
         if (investments.size() >= id){
             throw new TransactionNotFoundException(Utils.INVESTMENT_DOES_NOT_EXISTS);
         }
-        return investments.get((int) --id);
+        return investments.get((int) id);
     }
 }
