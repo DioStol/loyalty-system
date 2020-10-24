@@ -2,16 +2,16 @@ package com.rbi.loyaltysystem.repository;
 
 import com.rbi.loyaltysystem.exception.TransactionNotFoundException;
 import com.rbi.loyaltysystem.model.Transaction;
-import com.rbi.loyaltysystem.repository.api.Repository;
 import com.rbi.loyaltysystem.repository.api.TransactionRepository;
 import com.rbi.loyaltysystem.util.Utils;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.springframework.stereotype.Repository
-public class TransactionInMemoryRepository implements Repository<Transaction>, TransactionRepository {
+@Repository
+public class TransactionInMemoryRepository implements TransactionRepository {
 
     private List<Transaction> transactions;
 
@@ -30,10 +30,10 @@ public class TransactionInMemoryRepository implements Repository<Transaction>, T
         if (transactions == null) {
             throw new TransactionNotFoundException(Utils.NOT_AVAILABLE_TRANSACTIONS);
         }
-        if (transactions.size() >= id || id <= 0){
+        if (transactions.size() >= id) {
             throw new TransactionNotFoundException(Utils.TRANSACTION_DOES_NOT_EXISTS);
         }
-        return transactions.get((int) --id);
+        return transactions.get((int) id);
     }
 
     @Override

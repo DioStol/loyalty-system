@@ -25,10 +25,10 @@ public class CustomerInMemoryRepository implements CustomerRepository {
         if (customers.isEmpty()) {
             throw new CustomerNotFoundException(Utils.NOT_AVAILABLE_CUSTOMERS);
         }
-        if (customers.size() <= id || id <= 0) {
+        if (customers.size() <= id || id < 0) {
             throw new CustomerNotFoundException(Utils.CUSTOMER_DOES_NOT_EXISTS);
         }
-        return customers.get((int) --id);
+        return customers.get((int) id);
     }
 
     @Override
