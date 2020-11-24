@@ -52,8 +52,7 @@ public class TransactionService {
             transaction.setDate(LocalDate.now());
             transactionRepository.insert(transaction);
 
-            int points = calculatePoints(transaction.getAmount());
-            Point point = new Point(points, transaction.getId());
+            Point point = new Point(transaction.getAmount(), transaction.getId());
             sender.withdraw(transaction.getAmount());
             recipient.deposit(transaction.getAmount());
             sender.addPoint(point);
@@ -65,21 +64,5 @@ public class TransactionService {
     public TransactionDto getTransactions(long id) {
         List<Transaction> transactions = transactionRepository.findAllOrderByCustomer(id);
         return Utils.convertTransactionsToDto(transactions);
-    }
-
-    private int calculatePoints(double amount) {
-        int points;
-        if (amount <= 5000) {
-            points = (int) amount;
-        } else if (amount <= 7500) {
-            int x = (int) amount - 5000;
-            points = 5000;
-            points += x * 2;
-        } else {
-            points = 10000;
-            int x = (int) amount - 7500;
-            points += x * 3;
-        }
-        return points;
     }
 }

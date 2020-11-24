@@ -19,8 +19,8 @@ public class Point {
 
     private long transactionId;
 
-    public Point(int amount, long transactionId) {
-        this.amount = amount;
+    public Point(double transactionAmount, long transactionId) {
+        this.amount = calculatePoints(transactionAmount);
         this.earnings = convertToEuro(amount);
         this.date = LocalDate.now();
         this.status = Status.PENDING;
@@ -38,5 +38,22 @@ public class Point {
     public void deactivate() {
         this.status = Status.SPENT;
         this.earnings = 0;
+    }
+
+
+    private int calculatePoints(double amount) {
+        int points;
+        if (amount <= 5000) {
+            points = (int) amount;
+        } else if (amount <= 7500) {
+            int x = (int) amount - 5000;
+            points = 5000;
+            points += x * 2;
+        } else {
+            points = 10000;
+            int x = (int) amount - 7500;
+            points += x * 3;
+        }
+        return points;
     }
 }
